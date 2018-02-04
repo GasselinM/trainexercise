@@ -1,237 +1,187 @@
 inputTest = "AB5, BC4, CD8, DC8, DE6, AD5, CE2, EB3, AE7"
-road ='C-E-B-C-D-E-B-C'
-inputTwoPointsTrip='A-C'
+
 
 
 class TrainExercise:
     """blabla"""
     def __init__(self, inputTest):
-        self.inputTest = inputTest        
-        #self.parseinput = ''
-        self.dico = {}
+        self.inputTest = inputTest
+        self.graphRoads = {}
+
 
     def parseInput(self):
-        self.parseinput = self.inputTest.split(", ")
-
-        for distanceInput in self.parseinput:
-            if not distanceInput[0] in self.dico:
-                self.dico[distanceInput[0]] = { distanceInput[1]: distanceInput[2:]}
+        parseinput = self.inputTest.split(", ")
+        for distanceInput in parseinput:
+            if not distanceInput[0] in self.graphRoads:
+                self.graphRoads[distanceInput[0]] = { distanceInput[1]: distanceInput[2:]}
             else:
-                self.dico[distanceInput[0]][distanceInput[1]] = distanceInput[2:]
+                self.graphRoads[distanceInput[0]][distanceInput[1]] = distanceInput[2:]
         
-        #print(self.dico)
-        nbrOfSubDico=0
-        for key in self.dico:
-            nbrOfSubDico+= len(self.dico[key])
-            #print(nbrOfSubDico)
-        self.maxtest= len(self.dico)*nbrOfSubDico
-        
+        nbrOfSubgraphRoads=0
+        for key in self.graphRoads:
+            nbrOfSubgraphRoads+= len(self.graphRoads[key])
+        self.maxtest= len(self.graphRoads)*nbrOfSubgraphRoads
 
 
-
-    def parseRoad(self, road):
-        self.road = road
-        self.distTotal=0
-        error= False
-        self.parseroad= self.road.split('-')
-        #print(self.parseroad)
-
-        for i in range(len(self.parseroad)-1):
-            try:
-                self.distTotal += int(self.dico[self.parseroad[i]][self.parseroad[i+1]])
-            except KeyError:
-                print("NO SUCH ROUTE")
-                error = True
-
-        if not error == True:
-            print(self.distTotal)
-            return self.distTotal
+    def distanceBetweenCities(self, road):
+        distTotal=0
+        parseroad= road.split('-')
+        if parseroad[0] == road:
+            parseroad = list(road)
+        try:
+            for i in range(len(parseroad)-1):
+                distTotal += int(self.graphRoads[parseroad[i]][parseroad[i+1]])
+        except KeyError:
+                distTotal="NO SUCH ROUTE"
+        return distTotal
 
 
-    def numberOfTrip(self, inputTwoPointsTrip, maxStep):
-        self.maxStep = maxStep
-        self.inputTwoPointsTrip = inputTwoPointsTrip.split('-')
-        start, end = self.inputTwoPointsTrip[0], self.inputTwoPointsTrip[1]
-        liste = [start]
+    def numberOfTrip(self, inputTwoPointsTrip, maxStop):
+        inputTwoPointsTrip = inputTwoPointsTrip.split('-')
+        start, end = inputTwoPointsTrip[0], inputTwoPointsTrip[1]
+        listOfRoad = [start]
         temporary_liste = []
 
-        for i in range(maxStep):
+        for i in range(maxStop):
             if i==0:
-                for key in self.dico[start]:
-                    j=0
-                    if j != len(self.dico):
-                        temporary_liste.append(liste[i] + key)
-                        j+=1
-                liste = temporary_liste
-                temporary_liste=[]
+                for key in self.graphRoads[start]:
+                    listOfRoad.append(listOfRoad[i] + key)
             else:
-                for keyliste in liste:
-                    for key in self.dico[keyliste[-1]]:
+                for keyliste in listOfRoad:
+                    for key in self.graphRoads[keyliste[-1]]:
                         temporary_liste.append(keyliste + key)                        
-                liste = temporary_liste
+                listOfRoad = temporary_liste
                 temporary_liste=[]
-        print(liste)
-
         
-        liste_result=[]
-        for results in liste:
+        finalListe=[]
+        for results in listOfRoad:
             
             if end in results[1:]:
-                car=""
-                k=0
-                for j in results:
-                    
-                    if k==0:
-                        car = j
-                        k+=1
-                    elif not j == end:
-                        car+=j                        
+                temporaryRoad=""
+                k=0 #The k incremetation avoid to stop the test if start==end
+                for city in results:                    
+                    if k==0 or city != end:
+                        temporaryRoad+=city                        
                         k+=1                       
                     else:
-                        car+=j
-                        break
-                resultattts= car          
-                if not resultattts in liste_result:
-                    liste_result.append(resultattts)
-        print(liste_result)
-        self.finalresult=len(liste_result)
-        print(self.finalresult)
+                        temporaryRoad+=city
+                        break         
+                if not temporaryRoad in finalListe:
+                    finalListe.append(temporaryRoad)
+        return len(finalListe)
 
-    def numberOfTripWithMaxStep(self, inputTwoPointsTrip, NumberStep):
-        self.inputTwoPointsTrip = inputTwoPointsTrip.split('-')
-        start, end = self.inputTwoPointsTrip[0], self.inputTwoPointsTrip[1]
-        liste = [start]
+    def numberOfTripWithMaxStep(self, inputTwoPointsTrip, stopNumber):
+        inputTwoPointsTrip = inputTwoPointsTrip.split('-')
+        start, end = inputTwoPointsTrip[0], inputTwoPointsTrip[1]
+        listOfRoad = [start]
         temporary_liste = []
-        for i in range(NumberStep):
+        for i in range(stopNumber):
             if i==0:
-                for key in self.dico[start]:
-                    j=0
-                    if j != len(self.dico):
-                        temporary_liste.append(liste[i] + key)
-                        j+=1
-                liste = temporary_liste
-                temporary_liste=[]
+                for city in self.graphRoads[start]:
+                    listOfRoad.append(listOfRoad[i] + city)
             else:
-                for keyliste in liste:
-                    for key in self.dico[keyliste[-1]]:
-                        temporary_liste.append(keyliste + key)                        
-                liste = temporary_liste
+                for roadInProgress in listOfRoad:
+                    for city in self.graphRoads[roadInProgress[-1]]:
+                        temporary_liste.append(roadInProgress + city)                        
+                listOfRoad = temporary_liste
                 temporary_liste=[]         
-        liste_result=[]
+        finalRoadsList=[]
 
-        for results in liste:
+        for results in listOfRoad:
             if results.endswith(end):
-                liste_result.append(results)
-        self.numberOfTripWithMaxStep=len(liste_result)
-        print(self.numberOfTripWithMaxStep)
+                finalRoadsList.append(results)
+        return len(finalRoadsList)
 
     def shorterRoute(self, inputTwoPointsTrip):
-        self.inputTwoPointsTrip = inputTwoPointsTrip.split('-')
-        start, end = self.inputTwoPointsTrip[0], self.inputTwoPointsTrip[1]
+        inputTwoPointsTrip = inputTwoPointsTrip.split('-')
+        start, end = inputTwoPointsTrip[0], inputTwoPointsTrip[1]
         liste = [start]
         temporary_liste = []
         Finboucle = False
         Finboucle2=0
-        print("sm " + str(self.maxtest))
         i=0
 
         while Finboucle == False and Finboucle2 != self.maxtest:
             
             if i==0:
-                for key in self.dico[start]:
-                    j=0
-                    if j != len(self.dico):
-                        temporary_liste.append(liste[i] + key)
-                        j+=1
+                for city in self.graphRoads[start]:
+                    temporary_liste.append(liste[i] + city)
                 liste = temporary_liste
                 temporary_liste=[]
                 i=1
             else:
-                #print(liste)
-                for keyliste in liste:
-                    for key in self.dico[keyliste[-1]]:
-                        if not keyliste[-1] == end:
-                            temporary_liste.append(keyliste + key)
-                        elif keyliste in temporary_liste:
+                for roads in liste:
+                    for city in self.graphRoads[roads[-1]]:
+                        if not roads[-1] == end:
+                            temporary_liste.append(roads + city)
+                        elif roads in temporary_liste:
                             pass
                         else:
-                            temporary_liste.append(keyliste)
+                            temporary_liste.append(roads)
                 if temporary_liste == liste:
                     Finboucle=True
-                    print("finfin")
                 liste = temporary_liste
                 temporary_liste=[]
             Finboucle2+=1
-            print(Finboucle2)
-        dicoDeparse=[]
-        for cities in liste:
-            TempVal=""
-            for city in cities[:-1]:
-                print(city)
-                TempVal+= str(city) + "-"
-            TempVal+= str(cities[-1])            
-            dicoDeparse.append(TempVal)
+
         listeDistance=[]
-        for test in dicoDeparse:
-            bla=self.parseRoad(test)
-            listeDistance.append(bla)
-        print(min(listeDistance))
+        for road in liste:
+            listeDistance.append(self.distanceBetweenCities(road))
+        return min(listeDistance)
 
 
     def numberOfPossibleRoad(self, inputTwoPointsTrip, lengthLimit):
-        print("lasttest")
-        self.inputTwoPointsTrip = inputTwoPointsTrip.split('-')
-        start, end = self.inputTwoPointsTrip[0], self.inputTwoPointsTrip[1]
+        inputTwoPointsTrip = inputTwoPointsTrip.split('-')
+        start, end = inputTwoPointsTrip[0], inputTwoPointsTrip[1]
         liste = [start]
         temporary_liste = []
-        Finboucle = False
-        Finboucle2=0
+        Finboucle = 0
         finalList=[]
-        #print("sm " + str(self.maxtest))
         i=0
 
-        while Finboucle2 != lengthLimit:            
+        while Finboucle != lengthLimit:            
             if i==0:
-                for key in self.dico[start]:
-                    j=0
-                    if j != len(self.dico):
-                        temporary_liste.append(liste[i] + key)
-                        j+=1
+                for city in self.graphRoads[start]:
+                    temporary_liste.append(liste[i] + city)
                 liste = temporary_liste
                 temporary_liste=[]
                 i=1
             else:
-                #print(liste)
-                for keyliste in liste:
-                    for key in self.dico[keyliste[-1]]:
-                        temporary_liste.append(keyliste + key)
-                        if keyliste[-1] == end:
-                            finalList.append(keyliste)
-                            #print("finfin")
+                for roads in liste:
+                    for city in self.graphRoads[roads[-1]]:
+                        temporary_liste.append(roads + city)
+                        if roads[-1] == end:
+                            finalList.append(roads)
                 liste = temporary_liste
                 temporary_liste=[]
-            Finboucle2+=1
-            #print(Finboucle2)
-        dicoDeparse=[]
-        for cities in list(set(finalList)):
-            TempVal=""
-            for city in cities[:-1]:
-                #print(city)
-                TempVal+= str(city) + "-"
-            TempVal+= str(cities[-1])            
-            dicoDeparse.append(TempVal)
+            Finboucle+=1
+        roadsPreparation=[]
+        for cities in list(set(finalList)):        
+            roadsPreparation.append(cities)
         listeDistance=[]
-        for test in dicoDeparse:
-            bla= self.parseRoad(test)
-            if bla < lengthLimit:
-                listeDistance.append(bla)
-        print(len(listeDistance))
+        for road in roadsPreparation:
+            roadDistance= self.distanceBetweenCities(road)
+            if roadDistance < lengthLimit:
+                listeDistance.append(roadDistance)
+        return len(listeDistance)
 
+
+road="A-B-C"
 map = TrainExercise(inputTest)
 map.parseInput()
-#map.parseRoad(road)
-#map.numberOfTrip(inputTwoPointsTrip, 4)
-#map.numberOfTripWithMaxStep(inputTwoPointsTrip, 4)
-#map.shorterRoute("A-C")
+print(map.distanceBetweenCities(road))
+road2 ="AD"
 
-map.numberOfPossibleRoad("C-C", 30)
+road3= "A-D-C"
+road4= "A-E-B-C-D"
+road5= "A-E-D"
+print(map.distanceBetweenCities(road2))
+print(map.distanceBetweenCities(road3))
+print(map.distanceBetweenCities(road4))
+print(map.distanceBetweenCities(road5))
+print(map.numberOfTrip("C-C", 3))
+print(map.numberOfTripWithMaxStep("A-C", 4))
+print(map.shorterRoute("A-C"))
+print(map.shorterRoute("B-B"))
+
+print(map.numberOfPossibleRoad("C-C", 30))
