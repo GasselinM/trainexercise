@@ -1,4 +1,4 @@
-inputTest = "AB5, BC4, CD8, DC8, DE6, AD5, CE2, EB3, AE7"
+
 
 
 
@@ -88,7 +88,7 @@ class TrainExercise:
         finalRoadsList=[]
 
         for results in listOfRoad:
-            if results.endswith(end):
+            if results.endswith(end) and len(results)==stopNumber +1:
                 finalRoadsList.append(results)
         return len(finalRoadsList)
 
@@ -165,7 +165,8 @@ class TrainExercise:
                 listeDistance.append(roadDistance)
         return len(listeDistance)
 
-
+"""
+inputTest = "AB5, BC4, CD8, DC8, DE6, AD5, CE2, EB3, AE7"
 road="A-B-C"
 map = TrainExercise(inputTest)
 map.parseInput()
@@ -185,3 +186,4 @@ print(map.shorterRoute("A-C"))
 print(map.shorterRoute("B-B"))
 
 print(map.numberOfPossibleRoad("C-C", 30))
+"""
