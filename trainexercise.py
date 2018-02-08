@@ -181,7 +181,7 @@ class TrainExercise:
                 temporary_liste=[]
         return len(set(finalList))
 
-
+"""
 inputTest = "AB5, BC4, CD8, DC8, DE6, AD5, CE2, EB3, AE7"
 road="A-B-C"
 map = TrainExercise(inputTest)
@@ -201,4 +201,4 @@ print(map.numberOfTripWithMaxStep("A-C", 4))
 print(map.shortestRoute("A-C"))
 print(map.shortestRoute("B-B"))
 
-print(map.numberOfPossibleRoad("C-C", 30))
+print(map.numberOfPossibleRoad("C-C", 30))"""
