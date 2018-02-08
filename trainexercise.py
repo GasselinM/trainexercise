@@ -15,12 +15,6 @@ class TrainExercise:
                 self.graphRoads[distanceInput[0]] = { distanceInput[1]: distanceInput[2:]}
             else:
                 self.graphRoads[distanceInput[0]][distanceInput[1]] = distanceInput[2:]
-        
-        nbrOfSubgraphRoads=0
-        for key in self.graphRoads:
-            #Calculation of a limit for the method shortestRoute
-            nbrOfSubgraphRoads+= len(self.graphRoads[key])
-        self.maxtest= len(self.graphRoads)*nbrOfSubgraphRoads
 
 
     def distanceBetweenCities(self, road):
