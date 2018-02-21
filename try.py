@@ -33,12 +33,12 @@ class TrainTest(unittest.TestCase):
 
 	# Test 8 :
     def test8(self):
-        self.assertEqual(self.TrainExercise.shorterRoute('A-C'),9)
+        self.assertEqual(self.TrainExercise.shortestRoute('A-C'),9)
 
 
 	# Test 9 :
     def test9(self):
-        self.assertEqual(self.TrainExercise.shorterRoute('C-C'),9)
+        self.assertEqual(self.TrainExercise.shortestRoute('C-C'),9)
 
 	# Test 10 :
     def test10(self):
