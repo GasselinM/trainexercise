@@ -1,5 +1,5 @@
 class TrainExercise:
-    """Class for calculate distance or to deteminate all combinaison between routes
+    """Class to calculate distance or to deteminate all combinaison between routes
     The algorithm takes a first input: the roads with their distance.
     The input looks likes this pattern: AB5, BC4, CD8, DC10"""
     def __init__(self, inputTest):
