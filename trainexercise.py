@@ -12,7 +12,7 @@ class TrainExercise:
         parseinput = self.inputTest.split(", ")
         for distanceInput in parseinput:
             if not distanceInput[0] in self.graphRoads: #If the key doesn't exist, it creates it 
-                self.graphRoads[distanceInput[0]] = { distanceInput[1]: distanceInput[2:]}
+                self.graphRoads[distanceInput[0]] = { distanceInput[1]: distanceInput[2:] }
             else:
                 self.graphRoads[distanceInput[0]][distanceInput[1]] = distanceInput[2:]
 
@@ -20,8 +20,9 @@ class TrainExercise:
     def distanceBetweenCities(self, road):
         """Method to calculate distance of a road:
         the expected input looks like : "A-B" or "A-B-C-E" or "ABC" """
-        distTotal=0
-        parseroad= road.split('-')#Convert the pattern "A-B..." into a list
+        distTotal = 0
+        parseroad = road.split('-')#Convert the pattern "A-B..." into a list
+
         if parseroad[0] == road:  #Convert the pattern "AB..." into a list
             parseroad = list(road)
         try:
@@ -29,7 +30,7 @@ class TrainExercise:
                 distTotal += int(self.graphRoads[parseroad[i]][parseroad[i+1]])
                 #Increment the distotal with the distance between two cities
         except KeyError:
-                distTotal="NO SUCH ROUTE"
+                distTotal = "NO SUCH ROUTE"
                 #If the road between 2 cities doesn't exist, return NO SUCH ROUTE
         return distTotal
 
@@ -41,35 +42,35 @@ class TrainExercise:
         inputTwoPointsTrip = inputTwoPointsTrip.split('-')
         start, end = inputTwoPointsTrip[0], inputTwoPointsTrip[1] #City of begining and ending
         listOfRoad = [start] #List of possible routes
-        temporary_liste = []
+        temporary_list = []
 
         for i in range(maxStop):
-            if i==0:
+            if i == 0 :
                 for key in self.graphRoads[start]:
                     listOfRoad.append(listOfRoad[i] + key)
                     #For the first stop, it appends all the routes possible starting with the start city
             else:
-                for keyliste in listOfRoad:
-                    for key in self.graphRoads[keyliste[-1]]:
-                        temporary_liste.append(keyliste + key)                        
-                listOfRoad = temporary_liste #We throw roads under construction
-                temporary_liste=[]
-        
-        finalListe=[]        
-        for results in listOfRoad:            
+                for keylist in listOfRoad:
+                    for key in self.graphRoads[keylist[-1]]:
+                        temporary_list.append(keylist + key)
+                listOfRoad = temporary_list #We throw roads under construction
+                temporary_list = []        
+        finalList = []
+
+        for results in listOfRoad:
             if end in results[1:]: #If the ending city is on the road except for the first position
-                temporaryRoad=""
-                k=0 #The k incremetation avoid to stop the test if start==end
-                for city in results:                    
-                    if k==0 or city != end:
-                        temporaryRoad+=city                        
-                        k+=1                       
+                temporaryRoad= ""
+                k = 0 #The k incremetation avoid to stop the test if start==end
+                for city in results:
+                    if k == 0 or city != end:
+                        temporaryRoad += city
+                        k += 1
                     else:
-                        temporaryRoad+=city
-                        break         
-                if not temporaryRoad in finalListe: #delete duplicate
-                    finalListe.append(temporaryRoad)
-        return len(finalListe)
+                        temporaryRoad += city
+                        break
+                if not temporaryRoad in finalList: #delete duplicate
+                    finalList.append(temporaryRoad)
+        return len(finalList)
 
     def numberOfTripWithMaxStep(self, inputTwoPointsTrip, stopNumber):
         """Method to calculate The number of trips between two cities with a fixed number of stop
@@ -78,24 +79,24 @@ class TrainExercise:
         inputTwoPointsTrip = inputTwoPointsTrip.split('-')
         start, end = inputTwoPointsTrip[0], inputTwoPointsTrip[1]
         listOfRoad = [start]
-        temporary_liste = []
+        temporary_list = []
         #Same method than precedent
         for i in range(stopNumber):
-            if i==0:
+            if i == 0 :
                 for city in self.graphRoads[start]:
                     listOfRoad.append(listOfRoad[i] + city)
             else:
                 for roadInProgress in listOfRoad:
                     for city in self.graphRoads[roadInProgress[-1]]:
-                        temporary_liste.append(roadInProgress + city)                        
-                listOfRoad = temporary_liste
-                temporary_liste=[]         
-        finalRoadsList=[]
+                        temporary_list.append(roadInProgress + city)
+                listOfRoad = temporary_list
+                temporary_list = []
+        finalRoadsList = []
 
         for results in listOfRoad:
-            if results.endswith(end) and len(results)==stopNumber +1:
+            if results.endswith(end) and len(results) == stopNumber +1:
                 finalRoadsList.append(results)
-                #Keep only roads with expected ending and whith good number of stop
+                #Keep only roads with expected ending and whith good number of stop(s)
         return len(finalRoadsList)
 
     def shortestRoute(self, inputTwoPointsTrip):
@@ -104,41 +105,41 @@ class TrainExercise:
 
         inputTwoPointsTrip = inputTwoPointsTrip.split('-')
         start, end = inputTwoPointsTrip[0], inputTwoPointsTrip[1]
-        liste = [start]
-        temporary_liste = []
+        mylist = [start]
+        temporary_list = []
         Finboucle = False
-        minlist, minlist2 =0 , 0
-        i=0
+        minlist, minlist2 = 0, 0
+        i = 0
         #Same method than precedent with an end loop when the shorter route is the same between two loops
 
         while Finboucle == False:
-            
-            if i==0:
+            if i == 0:
                 for city in self.graphRoads[start]:
-                    temporary_liste.append(liste[i] + city)
-                liste = temporary_liste
-                temporary_liste=[]
-                i=1
+                    temporary_list.append(mylist[i] + city)
+                mylist = temporary_list
+                temporary_list = []
+                i = 1
             else:
-                for roads in liste:
+                for roads in mylist:
                     for city in self.graphRoads[roads[-1]]:
-                        if not roads[-1] == end: #If the road stop with end, it adss the road only once and does not continue the road construction
-                            temporary_liste.append(roads + city)
-                        elif roads in temporary_liste:
+                        if not roads[-1] == end: #If the road stop with end, it adds the road only once and does not continue the road construction
+                            temporary_list.append(roads + city)
+                        elif roads in temporary_list:
                             pass
                         else:
-                            temporary_liste.append(roads)
-                liste = temporary_liste
-                temporary_liste=[]
-                distancelist=[]
-                for roads in liste:
+                            temporary_list.append(roads)
+                mylist = temporary_list
+                temporary_list = []
+                distancelist = []
+
+                for roads in mylist:
                     distancelist.append(self.distanceBetweenCities(roads))
                 minlist = min(distancelist)
                 if minlist == minlist2: #End the loop if the shortest distance is the same than the precedent loop
-                    Finboucle=True
+                    Finboucle = True
                     return minlist
                 else:
-                    minlist2=minlist
+                    minlist2 = minlist
 
 
     def numberOfPossibleRoad(self, inputTwoPointsTrip, lengthLimit):
@@ -147,32 +148,33 @@ class TrainExercise:
         The second input expected is an integer for the maximum of stop"""
         inputTwoPointsTrip = inputTwoPointsTrip.split('-')
         start, end = inputTwoPointsTrip[0], inputTwoPointsTrip[1]
-        liste = [start]
-        temporary_liste = []
+        mylist = [start]
+        temporary_list = []
         Finboucle = False
-        finalList=[]
-        i=0
+        finalList =[]
+        i = 0
         #Same strategy than precedent with an end loop when all the routes under construction are higher than lengthLimit
 
-        while Finboucle == False:            
-            if i==0:
+        while Finboucle == False:
+            if i == 0:
                 for city in self.graphRoads[start]:
-                    temporary_liste.append(liste[i] + city)
-                liste = temporary_liste
-                temporary_liste=[]
-                i=1
+                    temporary_list.append(mylist[i] + city)
+                mylist = temporary_list
+                temporary_list = []
+                i = 1
             else:
-                for roads in liste:
+                for roads in mylist:
                     for city in self.graphRoads[roads[-1]]:
-                        temporary_liste.append(roads + city)
-                        if roads[-1] == end and self.distanceBetweenCities(roads)<30:
+                        temporary_list.append(roads + city)
+                        if roads[-1] == end and self.distanceBetweenCities(roads) < 30:
                             finalList.append(roads) #if roads satisfied criteria, appends it into the finallist
-                distancelist=[]
-                for roads in temporary_liste:
+                distancelist = []
+                
+                for roads in temporary_list:
                     distancelist.append(self.distanceBetweenCities(roads)) #list of the distance of roads under construction
                 Finboucle = all(i >= 30 for i in distancelist) #if all the distance are higher than 30, Finboucle = True
-                liste = temporary_liste                
-                temporary_liste=[]
+                mylist = temporary_list
+                temporary_list = []
         return len(set(finalList))
 
 """
